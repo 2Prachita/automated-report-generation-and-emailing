@@ -8,6 +8,9 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from prefect.logging import get_logger
+
+log = get_logger()
 
 
 def generate_daily_sales_report(date : datetime) -> bool:
@@ -42,7 +45,7 @@ def generate_daily_sales_report(date : datetime) -> bool:
     plt.ylabel('Quantity')
     plt.xticks(rotation=45, ha="right")  # Align text to the right
     plt.tight_layout()
-    salesimg = "sales.png"
+    salesimg = f"sales{date:%Y-%m-%d}.png"
     plt.savefig(salesimg)
 
     '''
@@ -85,7 +88,7 @@ def generate_daily_sales_report(date : datetime) -> bool:
         story = []
 
         story.append(Paragraph(f"Daily Sales Report {date: %Y-%m-%d}",style_heading))
-        story.append(Paragraph(f"""On {date: %B %d, %Y}, our bakery processed a total of {total_orders} orders, generating a revenue of € {revenue}. 
+        story.append(Paragraph(f"""On {date: %B %d, %Y}, our bakery processed a total of {total_orders} orders, generating a revenue of € {round(revenue)}. 
                             Throughout the day, a total of {total_articles} items were sold.
                             By analyzing these figures, we can refine our inventory and pricing strategies to enhance profitability and 
                             reduce waste while meeting customer demand efficiently.""",
@@ -116,7 +119,9 @@ def generate_daily_sales_report(date : datetime) -> bool:
         doc = SimpleDocTemplate(f'reports/Sales Report {date: %Y-%m-%d}.pdf',pagesize = letter)
         doc.build(story)
         
+        log.info("Report Generated")
+
         return True
     except Exception as e:
-        print(e)
+        log.error("Error generating Report ", e)
         return False

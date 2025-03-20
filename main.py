@@ -2,24 +2,27 @@ from datetime import datetime, timedelta
 from prefect.flows import flow 
 from prefect.tasks import task
 from config import DATE, FORMAT
-import logging
 from reportemail import daily_sale_report_email
 from reports import generate_daily_sales_report
+from prefect.logging import get_logger
 
-logging.basicConfig(level=logging.INFO, format=FORMAT)
+log = get_logger()
 
 @task
 def generate_report(date: datetime):
     generated= generate_daily_sales_report(date)
     if generated:
-        print("Report generated sucessfully!")
+        log.info("Report generated sucessfully!")
     else:
-        print("Report not generated")
+        log.info("Report not generated")
 
 @task
 def email_report(date: datetime):
     sent = daily_sale_report_email(date)
-    print(sent)
+    if sent :
+        log.info("Email sent")
+    else :
+        log.info("Email sending failed")
 
 @flow
 def daily_sales_report():

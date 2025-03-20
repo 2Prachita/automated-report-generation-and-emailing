@@ -3,13 +3,16 @@ import smtplib
 import os
 from email.message import EmailMessage
 from dotenv import load_dotenv
+from prefect.logging import get_logger
+
+log = get_logger()
 
 load_dotenv()
 SENDER = os.getenv('SENDER')
 RECEIVER = os.getenv('RECEIVER')
 PASSWORD = os.getenv('PASSWORD')
 
-def daily_sale_report_email(date: datetime):
+def daily_sale_report_email(date: datetime) -> bool:
     # Sender and Receiver Email
     sender_email = SENDER
     receiver_email = RECEIVER
@@ -50,6 +53,10 @@ def daily_sale_report_email(date: datetime):
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, message.as_string())
         server.quit()
-        return("Email sent successfully!")
+        
+        log.info("Email sent successfully!")
+
+        return True
     except Exception as e:
-        return(f"Error: {e}")
+        log.error("Error ", e)
+        return False
