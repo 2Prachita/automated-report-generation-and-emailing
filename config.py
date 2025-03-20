@@ -1,7 +1,7 @@
 DB_USER="prachitakotangale"
 DB_NAME="postgres"
 DB_HOST="localhost"
-DB_PASS=""
+DB_PASS="prachi"
 DATE_R=""
 FORMAT= "%(asctime)s - %(levelname)s - %(message)s"
 CURRENCY="€"
