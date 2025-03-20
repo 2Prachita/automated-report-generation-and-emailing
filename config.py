@@ -5,5 +5,5 @@ DB_PASS="prachi"
 DATE_R=""
 FORMAT= "%(asctime)s - %(levelname)s - %(message)s"
 CURRENCY="€"
-DATE="2021-01-02" #For testing taking manual input but this can be automated by changing date to the one to the previous day
+DATE="2021-01-03" #For testing taking manual input but this can be automated by changing date to the one to the previous day
 COLUMNS=['sid','date', 'time', 'order_number', 'article', 'quantity', 'unit_price']
